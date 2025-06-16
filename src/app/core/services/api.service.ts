@@ -11,7 +11,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
-  getPosts(limit: number = 6, page: number = 1): Observable<Post[]> {
+  getPosts(limit: number = 50, page: number = 1): Observable<Post[]> {
     const params = new HttpParams()
       .set('_limit', limit)
       .set('_page', page);
