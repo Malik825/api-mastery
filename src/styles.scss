@@ -9,8 +9,15 @@
 }
 body {
     font-family: 'Poppins', sans-serif;
-    background-color: #f3f4f6; // Tailwind gray-100
-    color: #374151; // Tailwind gray-700
+ background: linear-gradient(
+  to right,
+  #2de8e8 0%,     // bright aqua
+  #0fc2c0 25%,    // teal cyan
+  #805ad5 75%,    // deep purple
+  #6b46c1 100%    // darker purple
+);
+ // Tailwind gray-100 to gray-200
+    color: #374151; 
 }
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Roboto', sans-serif;

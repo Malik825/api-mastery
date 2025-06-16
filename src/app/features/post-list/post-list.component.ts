@@ -13,30 +13,22 @@ import { Post } from '../../core/models';
 })
 export class PostListComponent implements OnInit {
   posts: Post[] = [];
-  originalPosts: Post[] = [];
+  filteredPosts: Post[] = [];
 
   currentPage = 1;
   itemsPerPage = 6;
-  totalItems = 100; 
 
   loading = false;
   error: string | null = null;
 
-  searchQuery: string = '';
-  selectedCategory: string = '';
-  sortOption: string = 'newest';
+  searchQuery = '';
+  selectedCategory = '';
+  sortOption = 'newest';
 
-  // Sample UI metadata
-  sampleImages: string[] = [
- "assets/1.jpg",
- "assets/2.jpg",
- "assets/3.jpg",
-  "assets/4.jpg",
-  "assets/5.jpg",
-  "assets/6.jpg",
-  "assets/7.jpg",  
-  "assets/8.jpg",
-  "assets/9.jpg",
+  sampleImages = [
+    'assets/1.jpg', 'assets/2.jpg', 'assets/3.jpg',
+    'assets/4.jpg', 'assets/5.jpg', 'assets/6.jpg',
+    'assets/7.jpg', 'assets/8.jpg', 'assets/9.jpg',
   ];
 
   sampleCategories: string[] = ['Technology', 'Business', 'Health'];
@@ -47,11 +39,20 @@ export class PostListComponent implements OnInit {
     this.loadPosts();
   }
 
+  get visiblePosts(): Post[] {
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return this.filteredPosts.slice(start, start + this.itemsPerPage);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.filteredPosts.length / this.itemsPerPage);
+  }
+
   loadPosts(): void {
     this.loading = true;
     this.error = null;
 
-    this.apiService.getPosts(this.itemsPerPage, this.currentPage).subscribe({
+    this.apiService.getPosts(100, 1).subscribe({
       next: (data) => {
         const enhanced = data.map(post => ({
           ...post,
@@ -61,8 +62,8 @@ export class PostListComponent implements OnInit {
           readTime: `${Math.floor(Math.random() * 8 + 3)} min read`
         }));
 
-        this.originalPosts = enhanced;
         this.posts = enhanced;
+        this.applyFilters();
         this.loading = false;
       },
       error: (err) => {
@@ -76,22 +77,14 @@ export class PostListComponent implements OnInit {
     return array[Math.floor(Math.random() * array.length)];
   }
 
-  goToPage(page: number): void {
-    this.currentPage = page;
-    this.loadPosts();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
   changeItemsPerPage(event: Event): void {
-    const target = event.target as HTMLSelectElement;
-    const value = parseInt(target.value, 10);
+    const value = parseInt((event.target as HTMLSelectElement).value, 10);
     this.itemsPerPage = value;
     this.currentPage = 1;
-    this.loadPosts();
   }
 
   applyFilters(): void {
-    let filtered = structuredClone(this.originalPosts);
+    let filtered = [...this.posts];
 
     if (this.searchQuery) {
       const query = this.searchQuery.toLowerCase();
@@ -105,14 +98,33 @@ export class PostListComponent implements OnInit {
       filtered = filtered.filter(p => p.category === this.selectedCategory);
     }
 
-    if (this.sortOption === 'newest') {
-      filtered = filtered.sort((a, b) => b.id - a.id);
-    } else if (this.sortOption === 'oldest') {
-      filtered = filtered.sort((a, b) => a.id - b.id);
-    } else if (this.sortOption === 'popular') {
-      filtered = filtered.sort(() => Math.random() - 0.5); // Simulate popularity
+    switch (this.sortOption) {
+      case 'newest':
+        filtered.sort((a, b) => b.id - a.id);
+        break;
+      case 'oldest':
+        filtered.sort((a, b) => a.id - b.id);
+        break;
+      case 'popular':
+        filtered.sort(() => Math.random() - 0.5);
+        break;
     }
 
-    this.posts = filtered.slice(0, this.itemsPerPage);
+    this.filteredPosts = filtered;
+    this.currentPage = 1;
+  }
+
+  goToNextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  goToPreviousPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
   }
 }
