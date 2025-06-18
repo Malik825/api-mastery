@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../core/services/api.service';
 import { FormsModule } from '@angular/forms';
 import { Post } from '../../core/models';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterLink, RouterModule } from '@angular/router';
 import {
   trigger,
   transition,
@@ -16,14 +16,14 @@ import {
 @Component({
   selector: 'app-post-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, RouterLink],
   templateUrl: './post-list.component.html',
   styleUrls: ['./post-list.component.scss'],
   animations: [
     trigger('listStagger', [
       transition('* => *', [
         query(
-          ':enter',
+          ':leave',
           [
             style({ opacity: 0, transform: 'translateY(20px)' }),
             stagger(100, [
@@ -80,7 +80,7 @@ export class PostListComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    this.apiService.getPosts(6, 1).subscribe({
+    this.apiService.getPosts(30, 1).subscribe({
       next: (data) => {
         const enhanced = data.map(post => ({
           ...post,

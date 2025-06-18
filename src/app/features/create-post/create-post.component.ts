@@ -1,26 +1,25 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ApiService } from '../../core/services/api.service';
 import { Router } from '@angular/router';
-import { DomSanitizer } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-create-post',
+  standalone: true,
   imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './create-post.component.html',
-  styleUrl: './create-post.component.scss'
+  styleUrls: ['./create-post.component.scss'] // ✅ fixed typo from `styleUrl`
 })
 export class CreatePostComponent {
- postForm: FormGroup;
+  postForm: FormGroup;
   submitting = false;
   error: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private api: ApiService,
-    private router: Router,
-    private sanitizer: DomSanitizer
+    private router: Router
   ) {
     this.postForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(5)]],
@@ -36,10 +35,8 @@ export class CreatePostComponent {
     this.submitting = true;
     this.error = null;
 
-    const sanitizedBody = this.sanitizer.sanitize(1, this.postForm.value.body) || '';
     const newPost = {
       ...this.postForm.value,
-      body: sanitizedBody,
       userId: 1,
       date: new Date().toISOString(),
       image: 'assets/placeholder.jpg'
@@ -51,7 +48,9 @@ export class CreatePostComponent {
         this.error = 'Failed to create post';
         this.submitting = false;
       }
-  });
+    });
   }
-
+  goBack(): void {
+    this.router.navigate(['/posts']);
+  }
 }
