@@ -80,7 +80,7 @@ export class PostListComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    this.apiService.getPosts(100, 1).subscribe({
+    this.apiService.getPosts(6, 1).subscribe({
       next: (data) => {
         const enhanced = data.map(post => ({
           ...post,

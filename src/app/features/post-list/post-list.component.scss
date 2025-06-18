@@ -1,12 +1,41 @@
 .post-section{
- display: flex;
- flex-direction: column;
-    align-items: center;
-    padding: 2rem;
-    height: 100vh;
-    .post-top{
-      
-    }
+  background: rgba(255, 255, 255, 0.08); // very soft glass base
+  border-radius: 20px;
+  padding: 2rem;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow:
+    0 4px 30px rgba(0, 0, 0, 0.25),
+    inset 0 0 1px rgba(255, 255, 255, 0.3),
+    inset 0 0 8px rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+  color: #fefefe;
+  position: relative;
+  overflow: hidden;
+
+  // optional glossy shine line
+  &::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    left: -30%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent 60%);
+    transform: rotate(45deg);
+    pointer-events: none;
+    animation: shine 4s linear infinite;
+  }
+
+  &:hover {
+    box-shadow:
+      0 6px 40px rgba(0, 0, 0, 0.35),
+      inset 0 0 2px rgba(255, 255, 255, 0.3);
+    transform: scale(1.01);
+  }
+
+
 }
 .post-list-container {
 
@@ -280,4 +309,27 @@ img {
   max-width: 100%;
   display: block;
   border-radius: 0.5rem;
+}
+.create-post-btn {
+  color: #ffffff;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  font-size: 1rem;
+  text-decoration: none;
+  display: inline-block;
+  transition: 0.5s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  background: linear-gradient(135deg, #3bf66a, #2563eb);
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, #3bf66a, #1d4ed8);
+  }
 }

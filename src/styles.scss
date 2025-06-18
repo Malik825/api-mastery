@@ -9,16 +9,44 @@
 }
 body {
     font-family: 'Poppins', sans-serif;
- background: linear-gradient(
-  to right,
-  #2de8e8 0%,     // bright aqua
-  #0fc2c0 25%,    // teal cyan
-  #805ad5 75%,    // deep purple
-  #6b46c1 100%    // darker purple
-);
- // Tailwind gray-100 to gray-200
-    color: #374151; 
+ background: radial-gradient(circle at 20% 40%, #2de8e8, #0fc2c0 40%, #805ad5 75%, #6b46c1);
+  overflow-x: hidden;
+  position: relative;
+  animation: gradientShift 2s ease infinite alternate;
 }
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+.glassy-bg-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 30px 30px;
+  animation: floatParticles 20s linear infinite;
+  opacity: 0.4;
+  backdrop-filter: blur(2px);
+}
+
+@keyframes floatParticles {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100px 100px;
+  }
+}
+
+
 h1, h2, h3, h4, h5, h6 {
     font-family: 'Roboto', sans-serif;
     color: #111827; // Tailwind gray-900
