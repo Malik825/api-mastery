@@ -1,1 +1,110 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap');
+
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: 'Poppins', sans-serif;
+ background: radial-gradient(circle at 20% 40%, #2de8e8, #0fc2c0 40%, #805ad5 75%, #6b46c1);
+  overflow-x: hidden;
+  position: relative;
+  animation: gradientShift 2s ease infinite alternate;
+}
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 100%;
+  }
+  100% {
+    background-position: 100% 50%;
+  }
+}
+.glassy-bg-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 30px 30px;
+  animation: floatParticles 20s linear infinite;
+  opacity: 0.4;
+  backdrop-filter: blur(2px);
+}
+
+@keyframes floatParticles {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 100px 100px;
+  }
+}
+
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Roboto', sans-serif;
+    color: #111827; // Tailwind gray-900
+}
+.container {
+    width: 1200px;
+    margin: 0 auto;
+    max-width: 85%;
+    padding: 1rem;
+}
+.skeleton-wrapper {
+  max-width: 800px;
+  margin: auto;
+  padding: 2rem;
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #eeeeee 25%, #dddddd 50%, #eeeeee 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+.skeleton-title {
+  height: 32px;
+  width: 60%;
+  margin-bottom: 1.5rem;
+}
+
+.skeleton-paragraph {
+  height: 16px;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.skeleton-paragraph.short {
+  width: 70%;
+}
+
+.skeleton-comments {
+  margin-top: 2rem;
+}
+
+.skeleton-line {
+  height: 12px;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.skeleton-line.short {
+  width: 60%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
