@@ -46,7 +46,7 @@ export class CreatePostComponent {
         this.error = 'Failed to create post';
         this.submitting = false;
       }
-    });
+  });
   }
 
 }
