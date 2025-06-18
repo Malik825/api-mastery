@@ -20,4 +20,11 @@ export const routes: Routes = [
         (m) => m.PostDetailComponent
       )
   },
+  {
+    path: 'create-post',
+    loadComponent: () =>
+      import('./features/create-post/create-post.component').then(
+        (m) => m.CreatePostComponent
+      )
+  }
 ];

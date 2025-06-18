@@ -1,7 +1,8 @@
 <section class="post-section">
     <div class="container post-list-container">
   <!-- Header -->
-  <header class="post-header">
+ <div class="post-top">
+     <header class="post-header">
     <h1 class="page-title">Blog Posts</h1>
     <p class="page-subtitle">Browse through our latest articles</p>
   </header>
@@ -30,26 +31,39 @@
         <option value="oldest">Oldest First</option>
         <option value="popular">Most Popular</option>
       </select>
-    </div>
-  </div>
 
-  <!-- Post Grid -->
-  <div class="posts-grid" *ngIf="!loading && visiblePosts.length > 0">
-    <div *ngFor="let post of visiblePosts" class="post-card">
-      <img *ngIf="post.image" [src]="post.image" [alt]="post.title" class="post-card-img" />
-      <div class="post-card-content">
-        <div class="post-meta">
-          <span class="post-category">{{ post.category }}</span>
-          <span class="post-date">{{ post.date }}</span>
-        </div>
-        <h3 class="post-card-title">{{ post.title }}</h3>
-        <p class="post-card-body">{{ post.body }}</p>
-        <div class="post-footer">
-          <button class="read-more">Read more →</button>
-        </div>
+      <div class="new-post">
+        <button (click)="createPost()" class="new-post-btn">New Post</button>
       </div>
     </div>
   </div>
+ </div>
+
+  <!-- Post Grid -->
+<!-- Post Grid with animation -->
+<div class="posts-grid" *ngIf="!loading && visiblePosts.length > 0" [@listStagger]>
+  <div
+    *ngFor="let post of visiblePosts"
+    class="post-card"
+    [routerLink]="['/posts', post.id]"
+    style="cursor: pointer;"
+  >
+    <img *ngIf="post.image" [src]="post.image" [alt]="post.title" class="post-card-img" />
+
+    <div class="post-card-content">
+      <div class="post-meta">
+        <span class="post-category">{{ post.category }}</span>
+        <span class="post-date">{{ post.date }}</span>
+      </div>
+      <h3 class="post-card-title">{{ post.title }}</h3>
+      <p class="post-card-body">{{ post.body }}</p>
+      <div class="post-footer">
+        <span>{{ post.readTime }}</span>
+        <span class="read-more">Read more →</span>
+      </div>
+    </div>
+  </div>
+</div>
 
   <!-- No Results -->
   <div *ngIf="!loading && visiblePosts.length === 0" class="no-results">

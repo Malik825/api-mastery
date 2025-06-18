@@ -3,13 +3,41 @@ import { CommonModule } from '@angular/common';
 import { ApiService } from '../../core/services/api.service';
 import { FormsModule } from '@angular/forms';
 import { Post } from '../../core/models';
+import { Router, RouterModule } from '@angular/router';
+import {
+  trigger,
+  transition,
+  style,
+  animate,
+  query,
+  stagger
+} from '@angular/animations';
 
 @Component({
   selector: 'app-post-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './post-list.component.html',
-  styleUrls: ['./post-list.component.scss']
+  styleUrls: ['./post-list.component.scss'],
+  animations: [
+    trigger('listStagger', [
+      transition('* => *', [
+        query(
+          ':enter',
+          [
+            style({ opacity: 0, transform: 'translateY(20px)' }),
+            stagger(100, [
+              animate(
+                '500ms ease-out',
+                style({ opacity: 1, transform: 'translateY(0)' })
+              )
+            ])
+          ],
+          { optional: true }
+        )
+      ])
+    ])
+  ]
 })
 export class PostListComponent implements OnInit {
   posts: Post[] = [];
@@ -33,7 +61,7 @@ export class PostListComponent implements OnInit {
 
   sampleCategories: string[] = ['Technology', 'Business', 'Health'];
 
-  constructor(private apiService: ApiService) {}
+  constructor(private apiService: ApiService, private router:Router) {}
 
   ngOnInit(): void {
     this.loadPosts();
@@ -82,7 +110,9 @@ export class PostListComponent implements OnInit {
     this.itemsPerPage = value;
     this.currentPage = 1;
   }
-
+createPost(): void {
+  this.router.navigate(['/create-post']);
+}
   applyFilters(): void {
     let filtered = [...this.posts];
 
