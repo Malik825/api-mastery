@@ -163,4 +163,9 @@ createPost(): void {
     this.auth.logout();
     this.router.navigate(['/login']);
   }
+  deletePost(id: number): void {
+  this.apiService.deletePost(id);
+  this.loadPosts(); // Refresh list
+}
+
   }

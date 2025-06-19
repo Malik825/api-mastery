@@ -64,8 +64,7 @@
       <div class="post-footer">
         <span>{{ post.readTime }}</span>
         <span class="read-more">Read more →</span>
-        <!-- Show edit button only for local posts -->
-<!-- ✅ Correct edit button -->
+      
 
 
 
@@ -80,6 +79,14 @@
 >
   ✏️ Edit
 </button>
+<button
+  *ngIf="post.userId === 1 || post.id.toString().length >= 12"
+  class="delete-post-btn"
+  (click)="deletePost(post.id)"
+>
+  🗑️ Delete
+</button>
+
     </div>
   </div>
 </div>

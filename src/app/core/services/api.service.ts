@@ -3,7 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, throwError, of, map, tap } from 'rxjs';
 import { Post, PostComment } from '../models';
 import { ErrorHandlerService } from '../../error-handler.service.service';
-import { environment } from '../../../custom-typings/environment';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -145,4 +145,17 @@ export class ApiService {
       })
     );
   }
+  deletePost(id: number): void {
+  // Remove from local posts
+  const local = this.getLocalPosts().filter(p => p.id !== id);
+  this.saveLocalPosts(local);
+
+  // Remove from overrides
+  const overrides = this.getPostOverrides().filter(p => p.id !== id);
+  this.savePostOverrides(overrides);
+
+  // Clear from cache
+  this.cache.delete(`post-${id}`);
+}
+
 }
