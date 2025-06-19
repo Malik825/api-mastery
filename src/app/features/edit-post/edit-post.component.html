@@ -1,1 +1,39 @@
-<p>edit-post works!</p>
+<section class="create-post-section">
+  <div class="glass-card">
+    <button class="back-btn" (click)="goBack()">← Back to Posts</button>
+
+    <h2>Edit Post</h2>
+
+    <form *ngIf="postForm" [formGroup]="postForm" (ngSubmit)="submit()">
+      <div class="form-group">
+        <label for="title">Title</label>
+        <input id="title" type="text" formControlName="title" />
+      </div>
+
+      <div class="form-group">
+        <label for="body">Body</label>
+        <textarea id="body" formControlName="body" rows="5"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="category">Category</label>
+        <select formControlName="category">
+          <option>Technology</option>
+          <option>Business</option>
+          <option>Health</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="readTime">Read Time</label>
+        <input id="readTime" type="text" formControlName="readTime" />
+      </div>
+
+      <button type="submit" [disabled]="postForm.invalid || submitting">
+        {{ submitting ? 'Updating...' : 'Update Post' }}
+      </button>
+
+      <p *ngIf="error" class="error">{{ error }}</p>
+    </form>
+  </div>
+</section>

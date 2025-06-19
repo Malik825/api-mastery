@@ -60,7 +60,22 @@
       <div class="post-footer">
         <span>{{ post.readTime }}</span>
         <span class="read-more">Read more →</span>
+        <!-- Show edit button only for local posts -->
+<!-- ✅ Correct edit button -->
+
+
+
+
+
       </div>
+      <button
+  *ngIf="post.userId === 1 || post.id.toString().length >= 12"
+  class="edit-post-btn"
+  [routerLink]="['/posts/edit-post', post.id]"
+  (click)="$event.stopPropagation()"
+>
+  ✏️ Edit
+</button>
     </div>
   </div>
 </div>

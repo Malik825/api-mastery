@@ -9,9 +9,10 @@
 }
 body {
     font-family: 'Poppins', sans-serif;
- background: radial-gradient(circle at 20% 40%, #2de8e8, #0fc2c0 40%, #805ad5 75%, #6b46c1);
   overflow-x: hidden;
   position: relative;
+  
+  background: linear-gradient(135deg, #9708cc, #43CBFF, #9708cc, #43CBFF);
   animation: gradientShift 2s ease infinite alternate;
 }
 @keyframes gradientShift {
@@ -30,7 +31,7 @@ body {
   height: 100%;
   pointer-events: none;
   z-index: -1;
-  background: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+  // background: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
   background-size: 30px 30px;
   animation: floatParticles 20s linear infinite;
   opacity: 0.4;
@@ -107,4 +108,29 @@ h1, h2, h3, h4, h5, h6 {
   100% {
     background-position: 200% 0;
   }
+}
+.back-btn{
+  // Glass effect
+  // position: absolute;
+  // left: 0;
+  // width: fit-content;
+  // top: -2rem;
+  //  background: linear-gradient(1-35deg, #3bcaf6, #60a5fa);
+
+}
+select, input{
+}
+.back-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #333;
+  transition: background 0.3s ease;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
