@@ -3,23 +3,44 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, catchError, throwError, of, map, tap } from 'rxjs';
 import { Post, PostComment } from '../models';
 import { ErrorHandlerService } from '../../error-handler.service.service';
-
-const LOCAL_POST_KEY = 'localPosts';
-const OVERRIDE_KEY = 'postOverrides';
+import { environment } from '../../../custom-typings/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
-  private BASE_URL = 'https://jsonplaceholder.typicode.com';
+  private BASE_URL = environment.apiUrl;
+  private readonly LOCAL_POST_KEY = environment.localPostKey;
+  private readonly OVERRIDE_KEY = environment.overridePostKey;
+  private readonly cacheDuration = environment.cacheDurationMs;
 
-  constructor(private http: HttpClient,  private errorHandler: ErrorHandlerService) {}
+  private cache = new Map<string, { data: any; expiry: number }>();
 
-  // Local posts
+  constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) {}
+
+  private setCache(key: string, data: any) {
+    const expiry = Date.now() + this.cacheDuration;
+    this.cache.set(key, { data, expiry });
+  }
+
+  private getCache(key: string): any | null {
+    const cached = this.cache.get(key);
+    if (cached && cached.expiry > Date.now()) {
+      return cached.data;
+    } else {
+      this.cache.delete(key);
+      return null;
+    }
+  }
+
+  clearCache(): void {
+    this.cache.clear();
+  }
+
   private saveLocalPosts(posts: Post[]): void {
-    localStorage.setItem(LOCAL_POST_KEY, JSON.stringify(posts));
+    localStorage.setItem(this.LOCAL_POST_KEY, JSON.stringify(posts));
   }
 
   private getLocalPosts(): Post[] {
-    const data = localStorage.getItem(LOCAL_POST_KEY);
+    const data = localStorage.getItem(this.LOCAL_POST_KEY);
     return data ? JSON.parse(data) : [];
   }
 
@@ -27,13 +48,12 @@ export class ApiService {
     return this.getLocalPosts().find(p => p.id === id);
   }
 
-  // Override system
   private savePostOverrides(posts: Post[]): void {
-    localStorage.setItem(OVERRIDE_KEY, JSON.stringify(posts));
+    localStorage.setItem(this.OVERRIDE_KEY, JSON.stringify(posts));
   }
 
   private getPostOverrides(): Post[] {
-    const data = localStorage.getItem(OVERRIDE_KEY);
+    const data = localStorage.getItem(this.OVERRIDE_KEY);
     return data ? JSON.parse(data) : [];
   }
 
@@ -41,36 +61,29 @@ export class ApiService {
     return this.getPostOverrides().find(p => p.id === id);
   }
 
-  // Fetch all posts with merge
   getPosts(limit: number = 5, page: number = 1): Observable<Post[]> {
-    const params = new HttpParams()
-      .set('_limit', limit)
-      .set('_page', page);
+    const cacheKey = `posts-page-${page}-limit-${limit}`;
+    const cached = this.getCache(cacheKey);
+    if (cached) return of(cached);
+
+    const params = new HttpParams().set('_limit', limit).set('_page', page);
 
     return this.http.get<Post[]>(`${this.BASE_URL}/posts`, { params }).pipe(
       map(apiPosts => {
         const local = this.getLocalPosts();
         const overrides = this.getPostOverrides();
-
-        // Replace API posts with overrides if they exist
         const mergedApi = apiPosts.map(p => overrides.find(o => o.id === p.id) || p);
-
-        return [...local.reverse(), ...mergedApi];
+        const allPosts = [...local.reverse(), ...mergedApi];
+        this.setCache(cacheKey, allPosts);
+        return allPosts;
       }),
-      catchError(error => {
-        console.error('Error fetching posts:', error);
-        return throwError(() => new Error('Failed to fetch posts'));
-      })
+      catchError(error => this.errorHandler.handleError(error))
     );
   }
 
-  // Create post locally only
   createPost(post: Post): Observable<Post> {
     const localPosts = this.getLocalPosts();
-    const newPost: Post = {
-      ...post,
-      id: Date.now() // unique ID for local
-    };
+    const newPost: Post = { ...post, id: Date.now() };
     localPosts.push(newPost);
     this.saveLocalPosts(localPosts);
     return of(newPost).pipe(
@@ -78,8 +91,11 @@ export class ApiService {
     );
   }
 
-  // Get single post (check override → local → API)
   getPost(id: number): Observable<Post> {
+    const cacheKey = `post-${id}`;
+    const cached = this.getCache(cacheKey);
+    if (cached) return of(cached);
+
     const override = this.getOverride(id);
     if (override) return of(override);
 
@@ -87,14 +103,11 @@ export class ApiService {
     if (local) return of(local);
 
     return this.http.get<Post>(`${this.BASE_URL}/posts/${id}`).pipe(
-    catchError(err => this.errorHandler.handleError(err))
-  );
-   
+      tap(post => this.setCache(cacheKey, post)),
+      catchError(err => this.errorHandler.handleError(err))
+    );
   }
-  
-  
 
-  // Edit post: updates override or local
   updateLocalPost(id: number, updates: Partial<Post>): void {
     const localPosts = this.getLocalPosts();
     const index = localPosts.findIndex(p => p.id === id);
@@ -102,10 +115,10 @@ export class ApiService {
     if (index !== -1) {
       localPosts[index] = { ...localPosts[index], ...updates };
       this.saveLocalPosts(localPosts);
+      this.cache.delete(`post-${id}`);
       return;
     }
 
-    // Not a local post → store override
     const overrides = this.getPostOverrides();
     const overrideIndex = overrides.findIndex(p => p.id === id);
 
@@ -116,11 +129,16 @@ export class ApiService {
     }
 
     this.savePostOverrides(overrides);
+    this.cache.delete(`post-${id}`);
   }
 
-  // Comments (unchanged)
   getCommentsForPost(postId: number): Observable<PostComment[]> {
+    const cacheKey = `comments-post-${postId}`;
+    const cached = this.getCache(cacheKey);
+    if (cached) return of(cached);
+
     return this.http.get<PostComment[]>(`${this.BASE_URL}/posts/${postId}/comments`).pipe(
+      tap(data => this.setCache(cacheKey, data)),
       catchError(error => {
         console.error('Error fetching comments:', error);
         return throwError(() => new Error('Failed to fetch comments'));

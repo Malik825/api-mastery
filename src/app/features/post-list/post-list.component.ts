@@ -4,6 +4,8 @@ import { ApiService } from '../../core/services/api.service';
 import { FormsModule } from '@angular/forms';
 import { Post } from '../../core/models';
 import { Router, RouterLink, RouterModule } from '@angular/router';
+import { AuthService } from '../../auth.service';
+
 import {
   trigger,
   transition,
@@ -61,7 +63,7 @@ export class PostListComponent implements OnInit {
 
   sampleCategories: string[] = ['Technology', 'Business', 'Health'];
 
-  constructor(private apiService: ApiService, private router:Router) {}
+  constructor(private apiService: ApiService, private router:Router, private auth: AuthService) {}
 
   ngOnInit(): void {
     this.loadPosts();
@@ -157,4 +159,8 @@ createPost(): void {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }
-}
+     logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/login']);
+  }
+  }

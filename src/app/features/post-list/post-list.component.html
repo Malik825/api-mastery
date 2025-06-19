@@ -1,5 +1,6 @@
 <section class="post-section">
-    <div class="container post-list-container">
+  <div class="container post-list-container">
+      <div class="lgout" (click)="logout()">Logout</div>
   <!-- Header -->
  <div class="post-top">
      <header class="post-header">
@@ -33,8 +34,11 @@
       </select>
 
       <div class="new-post">
-        <button (click)="createPost()" class="create-post-btn">New Post</button>
-      </div>
+  <button (click)="createPost()" class="create-post-btn">
+    <span>New Post</span>
+  </button>
+</div>
+
     </div>
   </div>
  </div>

@@ -11,8 +11,8 @@ body {
     font-family: 'Poppins', sans-serif;
   overflow-x: hidden;
   position: relative;
+background: linear-gradient(290deg,  #0fc2c0 0%,  #805ad5 100% );
   
-  background: linear-gradient(135deg, #9708cc, #43CBFF, #9708cc, #43CBFF);
   animation: gradientShift 2s ease infinite alternate;
 }
 @keyframes gradientShift {
@@ -57,6 +57,9 @@ h1, h2, h3, h4, h5, h6 {
     margin: 0 auto;
     max-width: 85%;
     padding: 1rem;
+    @media (max-width:768px) {
+      max-width: 95%;
+    }
 }
 .skeleton-wrapper {
   max-width: 800px;
@@ -118,7 +121,10 @@ h1, h2, h3, h4, h5, h6 {
   //  background: linear-gradient(1-35deg, #3bcaf6, #60a5fa);
 
 }
-select, input{
+select, input, button, i {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+  font-family: "Poppins" !important;
 }
 .back-btn {
   background: rgba(255, 255, 255, 0.2);
@@ -133,4 +139,69 @@ select, input{
 
 .back-btn:hover {
   background: rgba(255, 255, 255, 0.3);
+}
+section {
+overflow: hidden;
+
+}
+section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  background-size: 40px 40px;
+  animation: moveDots 20s linear infinite;
+  opacity: 0.4;
+  background-image: radial-gradient(#ffffff 1px, transparent 1px);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(1px);
+  
+}
+
+// Optional: Enhance with custom glow particles
+section::after {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  background-image: radial-gradient(circle, #ffffff 2px, transparent 2px),
+                    radial-gradient(circle, #ffffff 1.5px, transparent 1.5px);
+  background-size: 60px 60px;
+  animation: floatDots 30s linear infinite;
+  z-index: 0;
+  opacity: 0.35;
+  pointer-events: none;
+  filter: blur(1px);
+}
+
+section.post-section::before{
+  background-image: radial-gradient(rgba(255,255,255, .52) 1px, transparent 1px) !important;
+
+}
+section.post-section::after{
+  background-image: radial-gradient(rgba(255,255,255, .52) 2px, transparent 1px) !important;
+
+}
+// Animations
+@keyframes moveDots {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-100px, -100px);
+  }
+}
+
+@keyframes floatDots {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate(50px, 50px) rotate(360deg);
+  }
 }

@@ -14,7 +14,6 @@ export const routes: Routes = [
         (m) => m.PostListComponent
       )
   },
-
   {
     path: 'posts/:id',
     loadComponent: () =>
@@ -22,22 +21,30 @@ export const routes: Routes = [
         (m) => m.PostDetailComponent
       )
   },
-{
-  path: 'create-post',
-  canActivate: [authGuard],
-  loadComponent: () => import('./features/create-post/create-post.component').then(m => m.CreatePostComponent)
-},
-{
-  path: 'posts/edit-post/:id',
-  canActivate: [authGuard],
-  loadComponent: () => import('./features/edit-post/edit-post.component').then(m => m.EditPostComponent)
-},
-
   {
-  path: 'login',
-  loadComponent: () =>
-    import('./features/login/login.component').then(m => m.LoginComponent)
-}
-
+    path: 'create-post',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/create-post/create-post.component').then(
+        (m) => m.CreatePostComponent
+      )
+  },
+  {
+    path: 'posts/edit-post/:id',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/edit-post/edit-post.component').then(
+        (m) => m.EditPostComponent
+      )
+  },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./features/login/login.component').then(m => m.LoginComponent)
+  },
+  // 👇 Catch-all route
+  {
+    path: '**',
+    redirectTo: 'posts'
+  }
 ];
-

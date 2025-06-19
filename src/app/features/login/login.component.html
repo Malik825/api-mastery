@@ -1,30 +1,26 @@
-<section class="login-section">
+<section #vantaBg class="login-section">
   <div class="glass-card">
     <h2>Login</h2>
 
     <form [formGroup]="loginForm" (ngSubmit)="submit()">
-      <!-- Email -->
       <div class="form-group">
-        <label for="email">Email</label>
-        <input id="email" type="email" formControlName="email" placeholder="you@example.com" />
-        <div *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched" class="error">
+        <label>Email</label>
+        <input type="email" formControlName="email" placeholder="you@example.com" />
+        <div class="error animated" *ngIf="loginForm.get('email')?.invalid && loginForm.get('email')?.touched">
           Enter a valid email.
         </div>
       </div>
 
-      <!-- Password -->
       <div class="form-group">
-        <label for="password">Password</label>
-        <input id="password" type="password" formControlName="password" placeholder="••••••••" />
-        <div *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched" class="error">
+        <label>Password</label>
+        <input type="password" formControlName="password" placeholder="••••••••" />
+        <div class="error animated" *ngIf="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
           Password is required.
         </div>
       </div>
 
-      <!-- Error Message -->
-      <p *ngIf="error" class="error">{{ error }}</p>
+      <p *ngIf="error" class="error shake">{{ error }}</p>
 
-      <!-- Submit Button -->
       <button type="submit" [disabled]="loginForm.invalid">Login</button>
     </form>
   </div>

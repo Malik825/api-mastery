@@ -12,6 +12,7 @@
  background: radial-gradient(circle at 20% 40%, #2de8e8, #0fc2c0 40%, #805ad5 75%, #6b46c1);
 
     backdrop-filter: blur(5px);
+    overflow-x: hidden !important;
 }
 .post-detail-section {
   min-height: 100vh;
@@ -29,10 +30,13 @@
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
   color: #333;
-  max-height: 90vh;
+  overflow-x: hidden;
+  max-height: 85.70dvh;
   overflow-y: auto;
+  &::-webkit-scrollbar {
+display: none;  
+}
 }
 
 .post-title {

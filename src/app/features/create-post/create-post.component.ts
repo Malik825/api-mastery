@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { ApiService } from '../../core/services/api.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-
+import { noProfanity } from '../../../custom-typings/core/validators/profanity.validator';
 @Component({
   selector: 'app-create-post',
   standalone: true,
@@ -66,8 +66,8 @@ export class CreatePostComponent {
     private router: Router
   ) {
     this.postForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(5)]],
-      body: ['', [Validators.required, Validators.minLength(10)]],
+      title: ['', [Validators.required, Validators.minLength(5), noProfanity]],
+  body: ['', [Validators.required, Validators.minLength(10), noProfanity]],
       category: ['Technology'],
       readTime: ['5 min read']
     });
