@@ -1,9 +1,11 @@
 import { Injectable } from "@angular/core";
+import { ApiService } from './core/services/api.service';
 
-// src/app/core/services/auth.service.ts
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly TOKEN_KEY = 'authToken';
+
+  constructor(private apiService: ApiService) {}
 
   login(email: string, password: string): boolean {
     if (email && password) {
@@ -16,6 +18,7 @@ export class AuthService {
 
   logout(): void {
     localStorage.removeItem(this.TOKEN_KEY);
+    this.apiService.clearCache(); // ✅ Clear cache on logout
   }
 
   isLoggedIn(): boolean {

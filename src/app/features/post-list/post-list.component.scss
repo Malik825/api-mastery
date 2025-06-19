@@ -114,9 +114,13 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   backdrop-filter: blur(12px);
+  overflow: hidden;
   &:hover {
     transform: translateY(-6px);
     box-shadow: 0 15px 30px rgba(0, 0, 0, 0.25);
+     img{
+    transform: scale(1.15);
+  }
   }
 }
 
@@ -126,6 +130,8 @@
   height: 200px;
   display: block;
   width: 100%;
+  transition: .35s ease;
+
 }
 
 .post-card-content {
@@ -246,7 +252,13 @@ background: rgba(255, 255, 255, 0.1)  ;
   .filter-controls {
     display: flex;
     gap: 0.75rem;
-
+    flex-wrap: wrap;
+@media (max-width:557px) {
+  select, div{
+    flex: 0 0 100%;
+    width: 100% !important;
+  }
+}
     .filter-dropdown {
       padding: 0.5rem 1rem;
       border-radius: 0.5rem;
@@ -313,6 +325,7 @@ img {
 .create-post-btn {
   color: #ffffff;
   padding: 0.75rem 1.5rem;
+  position: relative;
   border: none;
   cursor: pointer;
   border-radius: 0.5rem;
@@ -320,19 +333,41 @@ img {
   font-size: 1rem;
   text-decoration: none;
   display: inline-block;
+  overflow: hidden; // Clips pseudo element
   transition: 0.5s ease;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background: linear-gradient(135deg, #3bf66a, #2563eb);
+background: linear-gradient(290deg,  #0fc2c0 0%,  #805ad5 100% );
 
-  &:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
+
+  // Put text on top
+  span {
+    position: relative;
+    z-index: 10;
+  }
+@media (max-width:557px) {
+  &:hover{
+  transform: translateX(60%);
+}
+}
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+  background: linear-gradient(-140deg, #0fc2c0, #805ad5 45%);
+
+    transition: width 0.4s ease;
+    border-radius: 0.5rem;
+    z-index: 1; // lower than text
   }
 
-  &:hover {
-    background: linear-gradient(135deg, #3bf66a, #1d4ed8);
+  &:hover::before {
+    width: 100%;
   }
 }
+
 .edit-post-btn{
   position: absolute;
   top: 1rem;
@@ -349,9 +384,23 @@ img {
   transition: 0.5s ease;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   background: linear-gradient(190deg,  #43CBFF, #9708cc);
+background: linear-gradient(290deg,  #0fc2c0 0%,  #805ad5 100% );
 
   &:focus {
     outline: none;
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
   }
+}
+.lgout{
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: fit-content;
+  padding: .7rem 2rem;
+  // glassmorphism
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
