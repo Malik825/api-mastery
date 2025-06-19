@@ -1,1 +1,37 @@
-<p>post-detail works!</p>
+<section class="post-detail-section">
+  <!-- Loading State -->
+<!-- Shimmer Loader -->
+<div class="skeleton-wrapper" *ngIf="loading && !error">
+  <div class="skeleton-title shimmer"></div>
+  <div class="skeleton-paragraph shimmer"></div>
+  <div class="skeleton-paragraph short shimmer"></div>
+
+  <div class="skeleton-comments shimmer" *ngFor="let i of [1,2,3]">
+    <div class="skeleton-line shimmer"></div>
+    <div class="skeleton-line short shimmer"></div>
+  </div>
+</div>
+
+  <!-- Error State -->
+  <p *ngIf="error && !loading" class="error-text">{{ error }}</p>
+
+  <!-- Post Content -->
+  <div *ngIf="!loading && post && !error" class="glass-card">
+    <button class="back-btn" (click)="goBack()">← Back to Posts</button>
+    <h1 class="post-title">{{ post.title }}</h1>
+    <p class="post-body">{{ post.body }}</p>
+
+    <hr />
+
+    <!-- Comments Section -->
+    <section class="comments">
+      <h2>Comments ({{ comments.length }})</h2>
+      <div *ngFor="let comment of comments" class="comment-card">
+        <h3>{{ comment.name }}</h3>
+        <p><strong>{{ comment.email }}</strong></p>
+        <p>{{ comment.body }}</p>
+      </div>
+      <p *ngIf="comments.length === 0" class="no-comments">No comments yet.</p>
+    </section>
+  </div>
+</section>

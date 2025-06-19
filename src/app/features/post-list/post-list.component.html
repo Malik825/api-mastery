@@ -1,1 +1,107 @@
-<p>post-list works!</p>
+<section class="post-section">
+    <div class="container post-list-container">
+  <!-- Header -->
+ <div class="post-top">
+     <header class="post-header">
+    <h1 class="page-title">Blog Posts</h1>
+    <p class="page-subtitle">Browse through our latest articles</p>
+  </header>
+
+  <!-- Filters -->
+  <div class="filters-container">
+    <div class="search-wrapper">
+      <input
+        type="text"
+        [(ngModel)]="searchQuery"
+        (input)="applyFilters()"
+        placeholder="Search posts..."
+        class="search-input"
+      />
+      <i class="fas fa-search search-icon"></i>
+    </div>
+
+    <div class="filter-controls">
+      <select [(ngModel)]="selectedCategory" (change)="applyFilters()" class="filter-dropdown">
+        <option value="">All Categories</option>
+        <option *ngFor="let cat of sampleCategories">{{ cat }}</option>
+      </select>
+
+      <select [(ngModel)]="sortOption" (change)="applyFilters()" class="filter-dropdown">
+        <option value="newest">Newest First</option>
+        <option value="oldest">Oldest First</option>
+        <option value="popular">Most Popular</option>
+      </select>
+
+      <div class="new-post">
+        <button (click)="createPost()" class="create-post-btn">New Post</button>
+      </div>
+    </div>
+  </div>
+ </div>
+
+  <!-- Post Grid -->
+<!-- Post Grid with animation -->
+<div class="posts-grid" *ngIf="!loading && visiblePosts.length > 0" [@listStagger]>
+  <div
+    *ngFor="let post of visiblePosts"
+    class="post-card"
+    [routerLink]="['/posts', post.id]"
+    style="cursor: pointer;"
+  >
+    <img *ngIf="post.image" [src]="post.image" [alt]="post.title" class="post-card-img" />
+
+    <div class="post-card-content">
+      <div class="post-meta">
+        <span class="post-category">{{ post.category }}</span>
+        <span class="post-date">{{ post.date }}</span>
+      </div>
+      <h3 class="post-card-title">{{ post.title }}</h3>
+      <p class="post-card-body">{{ post.body }}</p>
+      <div class="post-footer">
+        <span>{{ post.readTime }}</span>
+        <span class="read-more">Read more →</span>
+        <!-- Show edit button only for local posts -->
+<!-- ✅ Correct edit button -->
+
+
+
+
+
+      </div>
+      <button
+  *ngIf="post.userId === 1 || post.id.toString().length >= 12"
+  class="edit-post-btn"
+  [routerLink]="['/posts/edit-post', post.id]"
+  (click)="$event.stopPropagation()"
+>
+  ✏️ Edit
+</button>
+    </div>
+  </div>
+</div>
+
+  <!-- No Results -->
+  <div *ngIf="!loading && visiblePosts.length === 0" class="no-results">
+    <p>No posts found. Try adjusting your filters or search.</p>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-text">Loading posts...</div>
+
+  <!-- Pagination -->
+  <div class="items-per-page">
+    <label for="itemsPerPage">Items per page:</label>
+    <select [(ngModel)]="itemsPerPage" (change)="changeItemsPerPage($event)" id="itemsPerPage" class="items-per-page-select">
+      <option value="6">6</option>
+      <option value="12">12</option>
+      <option value="24">24</option>
+    </select>
+  </div>
+
+  <div class="pagination-controls">
+    <button class="page-btn" (click)="goToPreviousPage()" [disabled]="currentPage === 1">Previous</button>
+    <button class="page-btn" (click)="goToNextPage()" [disabled]="currentPage === totalPages">Next</button>
+  </div>
+</div>
+
+</section>

@@ -1,0 +1,61 @@
+.post-detail-section{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  // background: linear-gradient(to right top, #e0eafc, #cfdef3);
+ background: radial-gradient(circle at 20% 40%, #2de8e8, #0fc2c0 40%, #805ad5 75%, #6b46c1);
+
+    backdrop-filter: blur(5px);
+}
+.post-detail-section {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: 2rem;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #333;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.post-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.post-body {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+
+
+.comments {
+  margin-top: 2rem;
+}
+
+.comment-card {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
