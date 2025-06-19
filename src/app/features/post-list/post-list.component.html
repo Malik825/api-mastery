@@ -64,8 +64,7 @@
       <div class="post-footer">
         <span>{{ post.readTime }}</span>
         <span class="read-more">Read more →</span>
-        <!-- Show edit button only for local posts -->
-<!-- ✅ Correct edit button -->
+      
 
 
 
@@ -80,6 +79,8 @@
 >
   ✏️ Edit
 </button>
+<button (click)="onDeleteClick($event, post.id)">🗑️ Delete</button>
+
     </div>
   </div>
 </div>

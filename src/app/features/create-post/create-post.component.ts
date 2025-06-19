@@ -4,6 +4,7 @@ import { ApiService } from '../../core/services/api.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { noProfanity } from '../../../custom-typings/core/validators/profanity.validator';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'app-create-post',
   standalone: true,
@@ -63,7 +64,8 @@ export class CreatePostComponent {
   constructor(
     private fb: FormBuilder,
     private api: ApiService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {
     this.postForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(5), noProfanity]],
@@ -86,13 +88,17 @@ export class CreatePostComponent {
       image: 'assets/placeholder.jpg'
     };
 
-    this.api.createPost(newPost).subscribe({
-      next: () => this.router.navigate(['/posts']),
-      error: () => {
-        this.error = 'Failed to create post';
-        this.submitting = false;
-      }
-    });
+  this.api.createPost(newPost).subscribe({
+  next: () => {
+    this.toastr.success('Post created successfully!', 'Success');
+    this.router.navigate(['/posts']);
+  },
+  error: () => {
+    this.toastr.error('Failed to create post', 'Error');
+    this.submitting = false;
+  }
+});
+
   }
   goBack(): void {
     this.router.navigate(['/posts']);

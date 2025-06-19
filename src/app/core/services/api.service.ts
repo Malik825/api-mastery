@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, catchError, throwError, of, map, tap } from 'rxjs';
+import { Observable, catchError, throwError, of, map, tap, BehaviorSubject } from 'rxjs';
 import { Post, PostComment } from '../models';
 import { ErrorHandlerService } from '../../error-handler.service.service';
-import { environment } from '../../../custom-typings/environment';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -13,6 +13,9 @@ export class ApiService {
   private readonly cacheDuration = environment.cacheDurationMs;
 
   private cache = new Map<string, { data: any; expiry: number }>();
+
+  public posts$ = new BehaviorSubject<Post[]>([]);
+  public comments$ = new BehaviorSubject<{ [postId: number]: PostComment[] }>({});
 
   constructor(private http: HttpClient, private errorHandler: ErrorHandlerService) {}
 
@@ -75,6 +78,7 @@ export class ApiService {
         const mergedApi = apiPosts.map(p => overrides.find(o => o.id === p.id) || p);
         const allPosts = [...local.reverse(), ...mergedApi];
         this.setCache(cacheKey, allPosts);
+        this.posts$.next(allPosts); // Live update emit
         return allPosts;
       }),
       catchError(error => this.errorHandler.handleError(error))
@@ -86,6 +90,7 @@ export class ApiService {
     const newPost: Post = { ...post, id: Date.now() };
     localPosts.push(newPost);
     this.saveLocalPosts(localPosts);
+    this.posts$.next([...localPosts]);
     return of(newPost).pipe(
       tap(() => console.log('Post saved locally:', newPost))
     );
@@ -116,6 +121,7 @@ export class ApiService {
       localPosts[index] = { ...localPosts[index], ...updates };
       this.saveLocalPosts(localPosts);
       this.cache.delete(`post-${id}`);
+      this.posts$.next([...localPosts]);
       return;
     }
 
@@ -130,6 +136,7 @@ export class ApiService {
 
     this.savePostOverrides(overrides);
     this.cache.delete(`post-${id}`);
+    this.posts$.next([...this.getLocalPosts(), ...overrides]);
   }
 
   getCommentsForPost(postId: number): Observable<PostComment[]> {
@@ -138,6 +145,12 @@ export class ApiService {
     if (cached) return of(cached);
 
     return this.http.get<PostComment[]>(`${this.BASE_URL}/posts/${postId}/comments`).pipe(
+      map(apiComments => {
+        const local = this.getLocalComments(postId);
+        const combined = [...local.reverse(), ...apiComments];
+        this.comments$.next({ ...this.comments$.getValue(), [postId]: combined });
+        return combined;
+      }),
       tap(data => this.setCache(cacheKey, data)),
       catchError(error => {
         console.error('Error fetching comments:', error);
@@ -145,4 +158,35 @@ export class ApiService {
       })
     );
   }
+
+  deletePost(id: number): void {
+    const local = this.getLocalPosts().filter(p => p.id !== id);
+    this.saveLocalPosts(local);
+
+    const overrides = this.getPostOverrides().filter(p => p.id !== id);
+    this.savePostOverrides(overrides);
+
+    this.cache.delete(`post-${id}`);
+    this.posts$.next([...local]);
+  }
+
+  private COMMENT_KEY = 'localComments';
+  private LOCAL_COMMENTS_KEY = 'localComments';
+
+ addComment(postId: number, comment: PostComment): void {
+  const comments = this.getLocalComments(postId);
+  const updated = [comment, ...comments];
+  localStorage.setItem(`${this.LOCAL_COMMENTS_KEY}_${postId}`, JSON.stringify(updated));
+}
+getLocalComments(postId: number): PostComment[] {
+  const data = localStorage.getItem(`${this.LOCAL_COMMENTS_KEY}_${postId}`);
+  return data ? JSON.parse(data) : [];
+}
+
+deleteComment(postId: number, commentId: number): void {
+  const comments = this.getLocalComments(postId);
+  const filtered = comments.filter(c => c.id !== commentId);
+  localStorage.setItem(`${this.LOCAL_COMMENTS_KEY}_${postId}`, JSON.stringify(filtered));
+}
+
 }
