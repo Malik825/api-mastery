@@ -79,13 +79,7 @@
 >
   ✏️ Edit
 </button>
-<button
-  *ngIf="post.userId === 1 || post.id.toString().length >= 12"
-  class="delete-post-btn"
-  (click)="deletePost(post.id)"
->
-  🗑️ Delete
-</button>
+<button (click)="onDeleteClick($event, post.id)">🗑️ Delete</button>
 
     </div>
   </div>

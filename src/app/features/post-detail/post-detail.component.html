@@ -1,37 +1,61 @@
 <section class="post-detail-section">
-  <!-- Loading State -->
-<!-- Shimmer Loader -->
-<div class="skeleton-wrapper" *ngIf="loading && !error">
-  <div class="skeleton-title shimmer"></div>
-  <div class="skeleton-paragraph shimmer"></div>
-  <div class="skeleton-paragraph short shimmer"></div>
-
-  <div class="skeleton-comments shimmer" *ngFor="let i of [1,2,3]">
-    <div class="skeleton-line shimmer"></div>
-    <div class="skeleton-line short shimmer"></div>
+  <!-- Loading Shimmer -->
+  <div class="skeleton-wrapper" *ngIf="loading && !error">
+    <div class="skeleton-title shimmer"></div>
+    <div class="skeleton-paragraph shimmer"></div>
+    <div class="skeleton-paragraph short shimmer"></div>
+    <div class="skeleton-comments shimmer" *ngFor="let i of [1,2,3]">
+      <div class="skeleton-line shimmer"></div>
+      <div class="skeleton-line short shimmer"></div>
+    </div>
   </div>
-</div>
 
-  <!-- Error State -->
+  <!-- Error Display -->
   <p *ngIf="error && !loading" class="error-text">{{ error }}</p>
 
-  <!-- Post Content -->
-  <div *ngIf="!loading && post && !error" class="glass-card">
-    <button class="back-btn" (click)="goBack()">← Back to Posts</button>
-    <h1 class="post-title">{{ post.title }}</h1>
-    <p class="post-body">{{ post.body }}</p>
+  <!-- Post Display -->
+  <div *ngIf="!loading && post && !error" class="glass-card post-glass">
+    <div class="post-header">
+      <button class="back-btn" (click)="goBack()">← Back to Posts</button>
+      <h1 class="post-title">{{ post.title }}</h1>
+      <p class="post-body">{{ post.body }}</p>
+      
+    </div>
 
-    <hr />
-
-    <!-- Comments Section -->
     <section class="comments">
       <h2>Comments ({{ comments.length }})</h2>
       <div *ngFor="let comment of comments" class="comment-card">
-        <h3>{{ comment.name }}</h3>
+       <div>
+         <h3>{{ comment.name }}</h3>
         <p><strong>{{ comment.email }}</strong></p>
         <p>{{ comment.body }}</p>
+       </div>
+        <button
+    *ngIf="comment.id.toString().length > 8" 
+    (click)="deleteComment(comment.id)"
+    class="delete-comment-btn"
+  >
+    🗑️ Delete
+  </button>
       </div>
       <p *ngIf="comments.length === 0" class="no-comments">No comments yet.</p>
     </section>
+
+    <form [formGroup]="commentForm" (ngSubmit)="addComment()" class="comment-form">
+      <h3>Add a Comment</h3>
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" formControlName="name" placeholder="Your name" />
+      </div>
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" formControlName="email" placeholder="you@example.com" />
+      </div>
+      <div class="form-group">
+        <label>Comment</label>
+        <textarea formControlName="body" rows="3" placeholder="Your message..."></textarea>
+      </div>
+      <button type="submit" [disabled]="commentForm.invalid">Submit</button>
+    </form>
   </div>
 </section>

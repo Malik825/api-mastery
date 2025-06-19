@@ -14,6 +14,7 @@ import {
   query,
   stagger
 } from '@angular/animations';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-post-list',
@@ -63,7 +64,7 @@ export class PostListComponent implements OnInit {
 
   sampleCategories: string[] = ['Technology', 'Business', 'Health'];
 
-  constructor(private apiService: ApiService, private router:Router, private auth: AuthService) {}
+  constructor(private apiService: ApiService, private router:Router, private auth: AuthService, private toastr: ToastrService) {}
 
   ngOnInit(): void {
     this.loadPosts();
@@ -165,7 +166,13 @@ createPost(): void {
   }
   deletePost(id: number): void {
   this.apiService.deletePost(id);
-  this.loadPosts(); // Refresh list
+  this.loadPosts(); 
+  this.toastr.success('Post deleted successfully.');
+}
+onDeleteClick(event: Event, id: number): void {
+  event.stopPropagation(); // 🚫 prevents bubbling to [routerLink]
+  this.deletePost(id);     // 🧹 your actual delete logic
+
 }
 
   }

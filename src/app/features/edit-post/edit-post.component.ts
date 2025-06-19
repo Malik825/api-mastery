@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ApiService } from '../../core/services/api.service';
 import { Post } from '../../core/models';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -24,7 +25,8 @@ export class EditPostComponent implements OnInit {
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private api: ApiService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -56,6 +58,7 @@ export class EditPostComponent implements OnInit {
     };
 
     this.api.updateLocalPost(this.postId, updatedPost);
+    this.toastr.success('Post updated successfully!', 'Success');
     this.router.navigate(['/posts']);
   }
    goBack(): void {

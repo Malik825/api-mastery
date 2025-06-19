@@ -6,12 +6,20 @@ import { provideHttpClient, withInterceptors, withInterceptorsFromDi, HttpClient
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { AuthInterceptor } from './app/auth.interceptor';
 import { importProvidersFrom } from '@angular/core';
+import { provideToastr } from 'ngx-toastr';
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
     provideAnimations(),
-    importProvidersFrom(HttpClientModule),
+    provideToastr({
+  positionClass: 'toast-bottom-right',
+  timeOut: 3000,
+  toastClass: 'ngx-toastr crazy-toast', // 👈 Add custom animation class
+  progressBar: true,
+  closeButton: true,
+}),
+    provideRouter(routes),    importProvidersFrom(HttpClientModule),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
