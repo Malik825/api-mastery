@@ -26,11 +26,17 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
-            ],
+  {
+    "glob": "**/*",
+    "input": "public",
+    "output": "/"
+  },
+  {
+    "glob": "_redirects",
+    "input": "src",
+    "output": "/"
+  }
+],
             "scripts": [
   "node_modules/jquery/dist/jquery.min.js",
   "node_modules/jquery.ripples/dist/jquery.ripples-min.js"
